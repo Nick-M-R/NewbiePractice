@@ -16,5 +16,3 @@ rmin = R_cyl
 rmax = 3
 N_r = 11
 r = np.linspace(rmin,rmax,N_r)
-
-#test
