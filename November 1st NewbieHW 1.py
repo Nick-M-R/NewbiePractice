@@ -102,3 +102,16 @@ for i in range(4):
     plt.suptitle(f"Flow Over a Rotating Cylinder, Γ = {Gamma_vec[i]}π, C_L = {round(Cl_mat, 5)}, C_D = {round(Cd_mat, 5)}")
 
 plt.show()
+
+# Problem 3
+
+# Gamma setup
+spaces = 101
+Gamma = np.linspace(0, -5*np.pi, spaces)
+
+# Numerically
+for t in range(spaces):
+    V_r2 = U_inf*np.cos(Theta)*(1 - (R_cyl**2/RR**2))
+    V_theta2 = - U_inf*np.sin(Theta)*(1 + (R_cyl**2/RR**2)) + (Gamma(t)*np.pi)/(2*np.pi*r)
+
+    
