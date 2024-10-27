@@ -111,7 +111,14 @@ Gamma = np.linspace(0, -5*np.pi, spaces)
 
 # Numerically
 for t in range(spaces):
+    #Setup of another velocity calculation
     V_r2 = U_inf*np.cos(Theta)*(1 - (R_cyl**2/RR**2))
     V_theta2 = - U_inf*np.sin(Theta)*(1 + (R_cyl**2/RR**2)) + (Gamma(t)*np.pi)/(2*np.pi*r)
-
-    
+    #convert to rectangular coordinates 
+    V_x2 = - np.sin(Theta)*V_theta2 + np.cos(Theta)*V_r2
+    V_y2 = np.cos(Theta)*V_theta2 + np.sin(Theta)*V_r2
+    #find total velocity
+    V_t2 = (V_x2**2+V_y2**2)**(1/2)
+    #Cp calculation
+    Cp2= 1 - (V_r2**2 + V_theta2**2)/(U_inf**2)
+    Cp_surf2 = Cp2[:,1]
