@@ -107,13 +107,13 @@ plt.show()
 
 # Gamma setup
 spaces = 101
-Gamma = np.linspace(0, -5*np.pi, spaces)
+Gamma = np.linspace(0, -1*np.pi, spaces) #******************** Ask Nick about >1 arcsin calculation when -5
 
 # Numerically
 for t in range(spaces):
     #Setup of another velocity calculation
     V_r2 = U_inf*np.cos(Theta)*(1 - (R_cyl**2/RR**2))
-    V_theta2 = - U_inf*np.sin(Theta)*(1 + (R_cyl**2/RR**2)) + (Gamma(t)*np.pi)/(2*np.pi*r)
+    V_theta2 = - U_inf*np.sin(Theta)*(1 + (R_cyl**2/RR**2)) + (Gamma[t]*np.pi)/(2*np.pi*r)
     #convert to rectangular coordinates 
     V_x2 = - np.sin(Theta)*V_theta2 + np.cos(Theta)*V_r2
     V_y2 = np.cos(Theta)*V_theta2 + np.sin(Theta)*V_r2
@@ -122,3 +122,27 @@ for t in range(spaces):
     #Cp calculation
     Cp2= 1 - (V_r2**2 + V_theta2**2)/(U_inf**2)
     Cp_surf2 = Cp2[:,1]
+    #Scott 
+    #Numerically
+    Cl_mat2 = (-1/2 * np.trapz((Theta[:,1]), (Cp_surf2*np.sin(Theta[:,1]))))/np.pi
+    #Analytically
+    Cl_ana2 = -(Gamma[t])/(U_inf*R_cyl)
+
+    #Stagnation Calculations
+
+    #Indexing
+    #min = np.argmin(np.abs(V_t2[11:30,1]))
+    array_1 = np.abs(V_t2[11:30,1])
+    index1 = np.where(array_1 == array_1.min())
+
+    #[_,index1] = min(abs(V_t2[11:30,1]))
+
+    #Mirror left and right sides
+    stag_num_right = (Theta[index1,1] - 3/2 * np.pi)/np.pi
+    stag_num_left = (-stag_num_right-1)
+    stag_ana = (np.arcsin((Gamma[t])/(4*np.pi*U_inf*R_cyl)))/np.pi
+    
+    
+
+
+
