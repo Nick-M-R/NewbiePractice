@@ -141,8 +141,28 @@ for t in range(spaces):
     stag_num_right = (Theta[index1,1] - 3/2 * np.pi)/np.pi
     stag_num_left = (-stag_num_right-1)
     stag_ana = (np.arcsin((Gamma[t])/(4*np.pi*U_inf*R_cyl)))/np.pi
-    
-    
+#plot results
+plt.figure()
+
+plt.subplot(1,2,1)
+plt.plot(Gamma, Cl_mat2, 'b-')
+plt.plot(Gamma, Cl_ana2, 'r')
+plt.xlabel('Circulation Gamma')
+plt.ylabel('C_1')
+plt.title('C_1 vs Circulation')
+plt.legend('Numerical','Analytical')
+
+plt.subplot(1,2,2)
+plt.plot(Gamma*np.pi, stag_num_right, 'b-')
+plt.xlim([min(Gamma)],max(Gamma*np.pi))
+plt.plot(Gamma*np.pi,stag_num_left, color = 'green',linestyle ='solid')
+plt.xlim([min(Gamma),max(Gamma*np.pi)])
+plt.plot(Gamma, stag_ana, 'r-')
+plt.xlabel('Circulation Gamma')
+plt.ylabel('Theta_s_t_a_g (pi)')
+plt.title('Stagnation Angle vs Circulation')
+plt.legend('Numerical Right','Numerical left','Analytical Right')
+
 
 
 
