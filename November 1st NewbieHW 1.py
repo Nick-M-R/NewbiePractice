@@ -107,8 +107,13 @@ plt.show()
 
 # Gamma setup
 spaces = 101
-Gamma = np.linspace(0, -1*np.pi, spaces) #******************** Ask Nick about >1 arcsin calculation when -5
+Gamma = np.linspace(0, -5*np.pi, spaces) #******************** Ask Nick about >1 arcsin calculation when -5
 
+Cl_mat2 = np.zeros(spaces)
+Cl_ana2 = np.zeros(spaces)
+stag_num_right = np.zeros(spaces)
+stag_num_left = np.zeros(spaces)
+stag_ana = np.zeros(spaces)
 # Numerically
 for t in range(spaces):
     #Setup of another velocity calculation
@@ -118,51 +123,48 @@ for t in range(spaces):
     V_x2 = - np.sin(Theta)*V_theta2 + np.cos(Theta)*V_r2
     V_y2 = np.cos(Theta)*V_theta2 + np.sin(Theta)*V_r2
     #find total velocity
-    V_t2 = (V_x2**2+V_y2**2)**(1/2)
+    V_t2 = np.sqrt(V_x2**2+V_y2**2)
     #Cp calculation
-    Cp2= 1 - (V_r2**2 + V_theta2**2)/(U_inf**2)
+    Cp2 = 1 - (V_r2**2 + V_theta2**2)/(U_inf**2)
     Cp_surf2 = Cp2[:,1]
     #Scott 
     #Numerically
-    Cl_mat2 = (-1/2 * np.trapz((Theta[:,1]), (Cp_surf2*np.sin(Theta[:,1]))))/np.pi
+    Cl_mat2[t] = (-1/2 * np.trapz(Cp_surf2 * np.sin(theta), theta)) / np.pi
     #Analytically
-    Cl_ana2 = -(Gamma[t])/(U_inf*R_cyl)
+    Cl_ana2[t] = -(Gamma[t])/(U_inf*R_cyl)
 
     #Stagnation Calculations
 
     #Indexing
     #min = np.argmin(np.abs(V_t2[11:30,1]))
     array_1 = np.abs(V_t2[11:30,1])
-    index1 = np.where(array_1 == array_1.min())
+    index1 = np.argmin(array_1) + 11
 
     #[_,index1] = min(abs(V_t2[11:30,1]))
 
     #Mirror left and right sides
-    stag_num_right = (Theta[index1,1] - 3/2 * np.pi)/np.pi
-    stag_num_left = (-stag_num_right-1)
-    stag_ana = (np.arcsin((Gamma[t])/(4*np.pi*U_inf*R_cyl)))/np.pi
+    stag_num_right[t] = (Theta[index1,1] - 3/2 * np.pi)/np.pi
+    stag_num_left[t] = (-stag_num_right[t]-1)
+    stag_ana = (np.arcsin((Gamma[t]) / (4 * np.pi * U_inf * R_cyl))) / np.pi
 #plot results
-plt.figure()
+plt.figure(figsize=(12, 6))
 
 plt.subplot(1,2,1)
-plt.plot(Gamma, Cl_mat2, 'b-')
-plt.plot(Gamma, Cl_ana2, 'r')
+plt.plot(Gamma, Cl_mat2, 'b-', label='Numerical')
+plt.plot(Gamma, Cl_ana2, 'r-', label='Analytical')
 plt.xlabel('Circulation Gamma')
-plt.ylabel('C_1')
-plt.title('C_1 vs Circulation')
-plt.legend('Numerical','Analytical')
+plt.ylabel('C_L')
+plt.title('C_L vs Circulation')
+plt.legend()
 
 plt.subplot(1,2,2)
-plt.plot(Gamma*np.pi, stag_num_right, 'b-')
-plt.xlim([min(Gamma)],max(Gamma*np.pi))
-plt.plot(Gamma*np.pi,stag_num_left, color = 'green',linestyle ='solid')
-plt.xlim([min(Gamma),max(Gamma*np.pi)])
-plt.plot(Gamma, stag_ana, 'r-')
+plt.plot(Gamma * np.pi, stag_num_right, 'b-', label='Numerical Right')
+plt.plot(Gamma * np.pi, stag_num_left, color = 'green', linestyle = 'solid', label='Numerical Left')
+plt.plot(Gamma * np.pi, stag_ana, 'r-', label='Analytical Right')
 plt.xlabel('Circulation Gamma')
-plt.ylabel('Theta_s_t_a_g (pi)')
+plt.ylabel('Theta_s_t_a_g (π)')
 plt.title('Stagnation Angle vs Circulation')
-plt.legend('Numerical Right','Numerical left','Analytical Right')
+plt.legend()
 
-
-
-
+plt.tight_layout()
+plt.show()
